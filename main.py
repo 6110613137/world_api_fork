@@ -32,14 +32,3 @@ async def read_root() -> dict:
 @app.get("/world")
 async def read_countries() -> dict:
     return {"result": data_country}
-
-
-# define function that handles "GET" request with endpoint "/world/city/{name}"
-# "/world/city/{name}" is a "path paramter" endpoint
-@app.get("/world/city/{name}")
-async def read_city(name: str) -> dict:
-    for row in data_city:
-        if row["Name"].lower() == name.lower():
-            return {"result": row}
-    return {"result": {}}
-
