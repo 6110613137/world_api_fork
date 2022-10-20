@@ -6,14 +6,14 @@ from fastapi import FastAPI
 
 # get country data from csv file
 filename = "world_table_country.csv"
-with open(filename, "r") as csv_file:
+with open(filename, "r",encoding="utf8") as csv_file:
     csv_reader = csv.reader(csv_file)
     headers = next(csv_reader)
     data_country = [{k: v for (k, v) in zip(headers, row)} for row in csv_reader]
 
 # get city data from csv file
 filename = "world_table_city.csv"
-with open(filename, "r") as csv_file:
+with open(filename, "r",encoding="utf8") as csv_file:
     csv_reader = csv.reader(csv_file)
     headers = next(csv_reader)
     data_city = [{k: v for (k, v) in zip(headers, row)} for row in csv_reader]
@@ -32,3 +32,21 @@ async def read_root() -> dict:
 @app.get("/world")
 async def read_countries() -> dict:
     return {"result": data_country}
+
+# define function that handles "GET" request with endpoint "/world/country/{name}"
+# "/world/country/{name}" is a "path paramter" endpoint
+@app.get("/world/country/{name}")
+async def read_country(name: str) -> dict:
+    for row in data_country:
+        if row["Name"].lower() == name.lower():
+            return {"result": row}
+    return {"result": {}}
+
+# define function that handles "GET" request with endpoint "/world/city/{name}"
+# "/world/city/{name}" is a "path paramter" endpoint
+@app.get("/world/city/{name}")
+async def read_city(name: str) -> dict:
+    for row in data_city:
+        if row["Name"].lower() == name.lower():
+            return {"result": row}
+    return {"result": {}}
